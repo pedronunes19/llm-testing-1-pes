@@ -1,0 +1,32 @@
+[package]
+name = "vibe-pes2019"
+version = "0.1.0"
+edition = "2021"
+description = "A PES 2019-inspired football game built with Bevy, targeting WASM"
+
+[dependencies]
+bevy = { version = "0.14", features = ["webgl2"] }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+console_error_panic_hook = "0.1"
+getrandom = { version = "0.3", features = ["wasm_js"] }
+uuid = { version = "1.28", features = ["js"] }
+
+# Fast iteration in dev — optimise deps but keep our code debuggable
+[profile.dev]
+opt-level = 1
+
+[profile.dev.package."*"]
+opt-level = 3
+
+# Small & fast WASM release builds
+[profile.release]
+opt-level = "z"
+lto = "thin"
+codegen-units = 1
+strip = true
+
+[profile.wasm-release]
+inherits = "release"
+opt-level = "z"
+lto = true
